@@ -1,28 +1,23 @@
 const express = require('express');
 const { Client } = require('pg');
-const dotenv = require('dotenv');
-
-// โหลดค่าต่างๆ จากไฟล์ .env
-dotenv.config();
-
 const app = express();
+const port = process.env.PORT || 8080; // ใช้พอร์ตที่ Render กำหนดให้
 
-// เชื่อมต่อกับ PostgreSQL
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL, // ใช้ env variable เพื่อความปลอดภัย
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false
   },
-  connectTimeoutMillis: 10000,
 });
 
 client.connect()
   .then(() => console.log('Connected to PostgreSQL on Render'))
   .catch(err => console.error('Connection error', err.stack));
 
-// กำหนดให้แอปพลิเคชันรันที่พอร์ตที่เหมาะสม
-const PORT = process.env.PORT || 3000; // ใช้พอร์ตจาก environment variable หรือ 3000
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
